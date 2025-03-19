@@ -27,7 +27,7 @@ const Goal = sequelize.define("Goal", {
   },
 });
 
-User.hasOne(Goal, { foreignKey: "UserId", onDelete: "CASCADE" });
+User.hasOne(Goal, { foreignKey: "userId", onDelete: "CASCADE" });
 Goal.belongsTo(User, { foreignKey: "userId" });
 
 module.exports = Goal;
