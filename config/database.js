@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
 
 const connectDB = async () => {
   try {
-    await Sequelize.authenticate();
+    await sequelize.authenticate();
     console.log("MySQL Connected");
   } catch (error) {
     console.log("Database connection failed:", error);
@@ -18,4 +18,4 @@ const connectDB = async () => {
   }
 };
 
-export default { sequelize, connectDB };
+module.exports = { sequelize, connectDB };
