@@ -13,6 +13,7 @@ const Goal = require("./models/Goal");
 const authRoutes = require("./routes/authRoutes");
 const itemRoutes = require("./routes/itemRoutes");
 const goalRoutes = require("./routes/goalRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ sequelize.sync().then(() => console.log("Database & Tables Synced"));
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/goals", goalRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
