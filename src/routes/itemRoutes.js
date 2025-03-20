@@ -1,6 +1,7 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const { verifyToken } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 const Item = require("../models/Item");
 
 const router = express.Router();
@@ -9,6 +10,7 @@ const router = express.Router();
 router.post(
   "/",
   verifyToken,
+  upload.single("image"),
   [
     body("name").notEmpty().withMessage("Item name is required"),
     body("price").isFloat({ gt: 0 }).withMessage("Valid price is required"),
@@ -23,7 +25,8 @@ router.post(
     }
 
     try {
-      const { name, price, imageUrl, link, category } = req.body;
+      const { name, price, link, category } = req.body;
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
       const item = await Item.create({
         userId: req.user.id,
         name,
