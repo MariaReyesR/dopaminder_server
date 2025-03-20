@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cors());
 
 // Serve uploaded images statically
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("src/uploads"));
 
 // Connedt to Database & Sync Models
 connectDB();
