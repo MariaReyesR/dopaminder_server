@@ -53,6 +53,23 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
+// Get single Item
+router.get("/:id", verifyToken, async (req, res) => {
+  try {
+    const item = await Item.findOne({
+      where: { id: req.params.id, userId: req.user.id },
+    });
+
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Update Item Status
 router.put("/:id", verifyToken, async (req, res) => {
   try {

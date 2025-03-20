@@ -2,17 +2,17 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const { connectDB, sequelize } = require("../config/database");
+const { connectDB, sequelize } = require("./config/database");
 
 // Import models
-const User = require("../models/User");
-const Item = require("../models/Item");
-const Goal = require("../models/Goal");
+const User = require("./models/User");
+const Item = require("./models/Item");
+const Goal = require("./models/Goal");
 
 // Import routes
-const authRoutes = require("../routes/authRoutes");
-const itemRoutes = require("../routes/itemRoutes");
-const goalRoutes = require("../routes/goalRoutes");
+const authRoutes = require("./routes/authRoutes");
+const itemRoutes = require("./routes/itemRoutes");
+const goalRoutes = require("./routes/goalRoutes");
 
 const app = express();
 
