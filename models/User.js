@@ -31,13 +31,13 @@ const User = sequelize.define(
     hooks: {
       beforeCreate: async (user) => {
         user.email = user.email.toLowerCase();
-        if (user.password) {
+        if (user.password && !user.password.startsWith("$2b$")) {
           const salt = await bcrypt.genSalt(12);
           user.password = await bcrypt.hash(user.password, salt);
         }
       },
       beforeUpdate: async (user) => {
-        if (user.changed("password")) {
+        if (user.changed("password") && !user.password.startsWith("$2b$")) {
           const salt = await bcrypt.genSalt(12);
           user.password = await bcrypt.hash(user.password, salt);
         }
