@@ -26,7 +26,8 @@ const Item = sequelize.define("Item", {
     allowNull: true,
   },
   link: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(1000),
+    allowNull: true,
   },
   category: {
     type: DataTypes.ENUM(
