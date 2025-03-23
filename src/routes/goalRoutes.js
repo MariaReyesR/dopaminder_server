@@ -2,6 +2,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const { verifyToken } = require("../middleware/authMiddleware");
 const Goal = require("../models/Goal");
+const upload = require("../middleware/uploadMiddleware");
 
 const router = express.Router();
 
@@ -22,10 +23,13 @@ router.post(
 
     try {
       const { goalName, goalAmount } = req.body;
+      const goalImage = req.file?.path || req.body.goalImage?.trim() || null;
+
       const goal = await Goal.create({
         userId: req.user.id,
         goalName,
         goalAmount,
+        goalImage,
         savedAmount: 0,
       });
       res.status(201).json(goal);
@@ -57,6 +61,8 @@ router.put("/:id", verifyToken, async (req, res) => {
     if (!goal) return res.status(404).json({ error: "Goal not found" });
 
     const { goalName, goalAmount, savedAmount } = req.body;
+    const goalImage =
+      req.file?.path || req.body.goalImage?.trim() || goal.goalImage;
 
     if (goalAmount && goalAmount <= 0) {
       return res
@@ -71,7 +77,7 @@ router.put("/:id", verifyToken, async (req, res) => {
         .status(400)
         .json({ error: "Saved amount cannot exceed goal amount" });
     }
-    await goal.update({ goalName, goalAmount, savedAmount });
+    await goal.update({ goalName, goalAmount, savedAmount, goalImage });
     res.json(goal);
   } catch (error) {
     console.error(error);

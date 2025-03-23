@@ -25,6 +25,10 @@ const Goal = sequelize.define("Goal", {
     type: DataTypes.FLOAT,
     defaultValue: 0,
   },
+  goalImage: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 User.hasOne(Goal, { foreignKey: "userId", onDelete: "CASCADE" });
