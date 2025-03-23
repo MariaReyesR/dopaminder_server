@@ -10,6 +10,8 @@ const router = express.Router();
 router.post(
   "/",
   verifyToken,
+  upload.single("image"),
+
   [
     body("goalName").notEmpty().withMessage("Goal name is required"),
     body("goalAmount")
@@ -35,6 +37,8 @@ router.post(
       res.status(201).json(goal);
     } catch (error) {
       console.error(error);
+      console.log("BODY:", req.body);
+      console.log("FILE:", req.file);
       res.status(500).json({ error: "Server error" });
     }
   }
@@ -53,7 +57,7 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 // Update Goal (example: Pay off debt)
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", verifyToken, upload.single("image"), async (req, res) => {
   try {
     const goal = await Goal.findOne({
       where: { id: req.params.id, userId: req.user.id },
@@ -80,6 +84,9 @@ router.put("/:id", verifyToken, async (req, res) => {
     await goal.update({ goalName, goalAmount, savedAmount, goalImage });
     res.json(goal);
   } catch (error) {
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
