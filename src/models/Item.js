@@ -25,6 +25,10 @@ const Item = sequelize.define("Item", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  cloudinaryId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   link: {
     type: DataTypes.STRING(1000),
     allowNull: true,

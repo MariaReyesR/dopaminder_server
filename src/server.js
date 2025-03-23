@@ -21,12 +21,42 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Serve uploaded images statically
-app.use("/uploads", express.static("src/uploads"));
+// Serve uploaded images statically from root-level /uploads
+const path = require("path");
+
+const uploadsPath = path.resolve(__dirname, "uploads");
+console.log("Serving uploads from:", uploadsPath);
+
+// CORS headers for static image requests
+app.use("/uploads", (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+});
+
+app.use("/uploads", express.static(uploadsPath));
+
+// test rout for debugging
+app.get("/test-image", (req, res) => {
+  const testPath = path.join(
+    __dirname,
+    "uploads",
+    "1742685407047-397001527.jpg"
+  );
+  console.log("Resolved test image path:", testPath);
+
+  res.sendFile(testPath, (err) => {
+    if (err) {
+      console.error("sendFile error:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+});
 
 // Connedt to Database & Sync Models
 connectDB();
-sequelize.sync().then(() => console.log("Database & Tables Synced"));
+sequelize
+  .sync({ alter: true })
+  .then(() => console.log("Database & Tables Synced"));
 
 //API Routes
 app.use("/api/auth", authRoutes);

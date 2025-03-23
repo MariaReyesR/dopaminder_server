@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const { verifyToken } = require("../middleware/authMiddleware");
 const upload = require("../middleware/uploadMiddleware");
 const Item = require("../models/Item");
+const cloudinary = require("cloudinary").v2;
 
 const router = express.Router();
 
@@ -26,16 +27,21 @@ router.post(
 
     try {
       const { name, price, link, category } = req.body;
-      const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+      const imageUrl = req.file?.path || req.body.imageUrl?.trim() || null;
+      const cloudinaryId = req.file?.filename || null;
+
       const item = await Item.create({
         userId: req.user.id,
         name,
         price,
         imageUrl,
+        cloudinaryId,
         link,
         category,
         status: "waiting",
       });
+
       console.log("Item created successfully", item);
       res.status(201).json(item);
     } catch (error) {
@@ -107,6 +113,11 @@ router.delete("/:id", verifyToken, async (req, res) => {
       return res
         .status(403)
         .json({ error: "Cannot delete item unless it's sold or returned" });
+    }
+
+    //delete image from cloudinary
+    if (item.cloudinaryId) {
+      await cloudinary.uploader.destroy(item.cloudinaryId);
     }
 
     await item.destroy();
