@@ -37,8 +37,6 @@ router.post(
       res.status(201).json(goal);
     } catch (error) {
       console.error(error);
-      console.log("BODY:", req.body);
-      console.log("FILE:", req.file);
       res.status(500).json({ error: "Server error" });
     }
   }
@@ -84,9 +82,6 @@ router.put("/:id", verifyToken, upload.single("image"), async (req, res) => {
     await goal.update({ goalName, goalAmount, savedAmount, goalImage });
     res.json(goal);
   } catch (error) {
-    console.log("req.body:", req.body);
-    console.log("req.file:", req.file);
-
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }

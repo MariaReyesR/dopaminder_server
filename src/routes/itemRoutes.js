@@ -18,10 +18,8 @@ router.post(
     body("category").notEmpty().withMessage("Category is required"),
   ],
   async (req, res) => {
-    console.log("Received request to create item", req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log("Validation errors", errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -42,7 +40,6 @@ router.post(
         status: "waiting",
       });
 
-      console.log("Item created successfully", item);
       res.status(201).json(item);
     } catch (error) {
       console.error("Server Error:", error);
@@ -81,7 +78,6 @@ router.get("/:id", verifyToken, async (req, res) => {
 // Update Item Status
 router.put("/:id", verifyToken, async (req, res) => {
   try {
-    console.log("Update request for item", req.params.id, req.body);
     const item = await Item.findOne({
       where: { id: req.params.id, userId: req.user.id },
     });

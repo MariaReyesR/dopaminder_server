@@ -42,7 +42,6 @@ router.post(
 
       user = await User.create({ name, email, password: hashedPassword });
 
-      // ✅ Check if JWT Secret is missing
       if (!process.env.JWT_SECRET) {
         return res
           .status(500)
@@ -64,24 +63,19 @@ router.post(
 // User Login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log("Login attempt:", email);
 
   try {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      console.log("Login failed: No user found");
       return res.status(400).json({ error: "Invalid credentials" });
     }
-
-    console.log("User found:", user.email);
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.log("Login failed: Incorrect password");
       return res.status(400).json({ error: "Invalid credentials" });
     }
-    console.log("Password matched. Generating token...");
+
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });

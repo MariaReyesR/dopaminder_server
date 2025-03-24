@@ -52,7 +52,6 @@ router.get("/", verifyToken, async (req, res) => {
       categoryBreakdown,
     });
   } catch (error) {
-    console.error("Error fetching dashboard data:", error);
     res.status(500).json({ error: "Server error" });
   }
 });

@@ -21,11 +21,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Serve uploaded images statically from root-level /uploads
+// Serve uploaded images
 const path = require("path");
 
 const uploadsPath = path.resolve(__dirname, "uploads");
-console.log("Serving uploads from:", uploadsPath);
 
 // CORS headers for static image requests
 app.use("/uploads", (req, res, next) => {
@@ -42,11 +41,9 @@ app.get("/test-image", (req, res) => {
     "uploads",
     "1742685407047-397001527.jpg"
   );
-  console.log("Resolved test image path:", testPath);
 
   res.sendFile(testPath, (err) => {
     if (err) {
-      console.error("sendFile error:", err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
@@ -54,9 +51,7 @@ app.get("/test-image", (req, res) => {
 
 // Connedt to Database & Sync Models
 connectDB();
-sequelize
-  .sync({ alter: true })
-  .then(() => console.log("Database & Tables Synced"));
+sequelize.sync({ alter: true });
 
 //API Routes
 app.use("/api/auth", authRoutes);
@@ -71,10 +66,9 @@ app.get("/", (req, res) => {
 
 // Global Error Handling
 app.use((err, req, res, next) => {
-  console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
 });
 
 // Start Server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT);

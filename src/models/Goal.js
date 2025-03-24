@@ -8,23 +8,28 @@ const Goal = sequelize.define("Goal", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
+
   userId: {
     type: DataTypes.UUID,
     allowNull: false,
     references: { model: User, key: "id" },
   },
+
   goalName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+
   goalAmount: {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
+
   savedAmount: {
     type: DataTypes.FLOAT,
     defaultValue: 0,
   },
+
   goalImage: {
     type: DataTypes.STRING,
     allowNull: true,
